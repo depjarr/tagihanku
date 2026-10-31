@@ -1,0 +1,20 @@
+# Tagihanku (frontend) di Netlify.
+# Pengaturan situs: Base directory = apps/web   (kalau repo berisi seluruh proyek)
+# Environment variable WAJIB di Netlify: VITE_API_URL = https://<alamat-api-kamu>/api
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA: semua alamat (mis. /s/abc123, /settings) dilayani index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

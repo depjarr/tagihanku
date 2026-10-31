@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: splitbill
+      POSTGRES_PASSWORD: splitbill
+      POSTGRES_DB: splitbill
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U splitbill"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: postgresql://splitbill:splitbill@db:5432/splitbill?schema=public
+      PORT: 3000
+      CORS_ORIGIN: http://localhost:8080
+      OCR_PROVIDER: tesseract     # OCR sungguhan ("mock" = data contoh tetap, hanya untuk coba UI)
+      OCR_CACHE_DIR: /data/ocr    # data bahasa OCR (diunduh sekali, butuh internet saat scan pertama)
+      UPLOAD_DIR: /data/uploads
+      JWT_SECRET: ganti-ini-di-production
+      WEB_URL: http://localhost:8080
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}   # opsional: aktifkan login Google
+      MAIL_PROVIDER: console      # smtp → isi SMTP_HOST/PORT/USER/PASS
+    ports: ["3000:3000"]
+    depends_on:
+      db: { condition: service_healthy }
+    volumes:
+      - uploads:/data/uploads
+      - ocrcache:/data/ocr
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        VITE_API_URL: http://localhost:3000/api
+    ports: ["8080:80"]
+    depends_on: [api]
+
+volumes:
+  pgdata:
+  uploads:
+  ocrcache:
