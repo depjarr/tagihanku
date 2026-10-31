@@ -710,7 +710,7 @@ async function syncFromServer() {
 
     try { localStorage.setItem(KEY_SYNC_OWNER, uid) } catch { /* mode privat */ }
     if (pending.size) flushBills()
-    if (owner.value.name === 'Kamu' && auth.user?.name) ownerName.value = auth.user.name
+    adoptAccountName()
   } catch { /* offline / server belum siap: tetap pakai data di HP */ } finally {
     syncing = false
   }
@@ -718,6 +718,14 @@ async function syncFromServer() {
 
 // akun baru selesai dimuat (login / pulihkan sesi) setelah halaman terbuka
 watch(() => auth.user?.id, (id) => { if (id) syncFromServer() })
+
+// Nama pembuat masih bawaan "Kamu" → pakai nama akun begitu sudah login.
+// Dipisah dari sinkron supaya tetap jalan walau server sinkron belum siap / offline.
+function adoptAccountName() {
+  const o = participants.value.find((p) => p.isOwner)
+  if (o && o.name === 'Kamu' && auth.user?.name) ownerName.value = auth.user.name
+}
+watch([() => auth.user?.name, () => participants.value.find((p) => p.isOwner)?.name], adoptAccountName, { immediate: true })
 
 // ==========================================
 // 11. PENGENALAN & MULAI
