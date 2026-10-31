@@ -124,7 +124,7 @@ input[type='number'] { -moz-appearance: textfield; }
 @layer components {
   /* kartu bergaya stiker: garis tebal + bayangan bawah, seperti ilustrasi referensi */
   .card {
-    @apply bg-surface border-2 border-edge rounded-3xl shadow-sticker;
+    @apply bg-surface border-2 border-edge rounded-3xl shadow-sticker p-4;
   }
   .card-flat {
     @apply bg-surface border border-line rounded-3xl;
@@ -177,6 +177,14 @@ input[type='number'] { -moz-appearance: textfield; }
     @apply w-full rounded-2xl border-2 border-dashed border-edge/50 bg-transparent px-4 py-3 text-xs font-extrabold text-muted
            active:translate-y-[1px] transition;
   }
+  /* tombol di halaman lama: beri ukuran bawaan (utilitas seperti py-4 tetap bisa menimpa) */
+  :where(.screen) :is(.btn-primary, .btn-soft, .btn-accent, .btn-sun) { @apply px-4 py-3 text-sm; }
+  /* bar tombol menempel di bawah layar (editor, ringkasan) */
+  .bar {
+    @apply fixed inset-x-0 bottom-0 z-10 mx-auto max-w-md px-4 pt-6 bg-gradient-to-t from-page via-page to-transparent;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .bar .btn-primary, .bar .btn-soft, .bar .btn-outline { @apply w-full py-3.5 text-base; }
   /* tombol utama / lembut default: lebar penuh & lega saat dipakai di form */
   form .btn-primary { @apply w-full py-3.5 text-base; }
 
