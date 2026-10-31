@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import HomeView from '../views/HomeView.vue'
+import SplitFlowView from '../views/SplitFlowView.vue'
 import BillEditorView from '../views/BillEditorView.vue'
 import SummaryView from '../views/SummaryView.vue'
 import SharedView from '../views/SharedView.vue'
@@ -20,7 +21,8 @@ import ProfileView from '../views/settings/ProfileView.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home', component: HomeView },
+    { path: '/', name: 'home', component: SplitFlowView }, // alur utama: scan kamera / upload / manual
+    { path: '/tagihan-akun', name: 'account-bills', component: HomeView }, // riwayat tagihan tersimpan di akun
     { path: '/new', name: 'new', component: BillEditorView },
     { path: '/bills/:id/edit', name: 'edit', component: BillEditorView },
     { path: '/bills/:id/summary', name: 'summary', component: SummaryView },

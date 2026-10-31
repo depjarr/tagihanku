@@ -1,5 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/authStore'
 import { toDynamicQris, isValidQris, merchantName, merchantNmid } from '../composables/useQris'
 import { decodeQrFromFile, drawQr, qrToDataUrl } from '../composables/useQrScan'
 import { prepareReceiptImage } from '../composables/useReceiptImage'
@@ -14,6 +16,9 @@ import ThemeSheet from '../components/ThemeSheet.vue'
 import WelcomeIntro from '../components/WelcomeIntro.vue'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const router = useRouter()
+const auth = useAuthStore()
+const goAccount = () => router.push({ name: auth.loggedIn ? 'settings' : 'login' })
 
 // Ubah ke true kalau pengenalan mau muncul setiap aplikasi dibuka (bukan hanya pertama kali).
 const SHOW_WELCOME_EVERY_VISIT = false
@@ -656,6 +661,7 @@ onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
           <div class="flex gap-2">
             <button class="circle-btn" aria-label="Ubah tema" @click="showTheme = true">🎨</button>
             <button class="circle-btn" aria-label="Rekening dan QRIS" @click="showPaymentModal = true">💳</button>
+            <button class="circle-btn" :aria-label="auth.loggedIn ? 'Pengaturan akun' : 'Masuk atau daftar'" @click="goAccount">{{ auth.loggedIn ? '⚙️' : '👤' }}</button>
           </div>
         </header>
 
