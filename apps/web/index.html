@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id" data-theme="roti">
+<html lang="id" data-accent="biru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,10 +10,13 @@
   </head>
   <body>
     <script>
-      // pasang tema tersimpan sebelum render pertama supaya tidak "berkedip"
+      // pasang warna + mode tersimpan sebelum render pertama supaya tidak "berkedip"
       try {
-        var t = localStorage.getItem('tagihanku_theme') || 'roti';
-        document.documentElement.setAttribute('data-theme', t);
+        var r = document.documentElement;
+        var a = localStorage.getItem('splitbill.accent') || 'biru';
+        var m = localStorage.getItem('splitbill.theme') || 'light';
+        r.setAttribute('data-accent', a);
+        if (m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) r.classList.add('dark');
       } catch (e) {}
     </script>
     <div id="app"></div>
