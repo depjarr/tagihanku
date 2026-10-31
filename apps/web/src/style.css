@@ -192,6 +192,15 @@ input[type='number'] { -moz-appearance: textfield; }
     @apply w-9 h-9 rounded-full bg-surface border-2 border-edge shadow-sticker-sm flex items-center justify-center
            font-bold text-sm active:translate-y-[1px] active:shadow-none transition;
   }
+
+  /* baris menu di halaman Pengaturan */
+  .menu-row {
+    @apply flex w-full items-center gap-3 py-3.5 text-left text-base font-bold text-ink;
+  }
+  .menu-row + .menu-row { @apply border-t border-line; }
+  .menu-icon {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-page border border-line text-base;
+  }
 }
 
 /* motif kotak-kotak (gingham) seperti ikon HP referensi */

@@ -32,24 +32,53 @@ function logout() {
     <p class="eyebrow mt-6">Aplikasi</p>
     <section class="card mt-2 !py-0">
       <button class="menu-row" @click="go('settings-appearance')">
-        <span>Tampilan<span class="block text-sm font-medium text-muted">{{ describeLook(auth.settings.accent, auth.settings.theme) }}</span></span>
+        <span class="menu-icon" aria-hidden="true">🎨</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Tampilan</span>
+          <span class="block truncate text-sm font-medium text-muted">{{ describeLook(auth.settings.accent, auth.settings.theme) }}</span>
+        </span>
         <span aria-hidden="true" class="text-muted">›</span>
       </button>
       <button class="menu-row" @click="go('settings-notifications')">
-        <span>Notifikasi<span class="block text-sm font-medium text-muted">{{ notifSummary(auth.settings) }}</span></span>
+        <span class="menu-icon" aria-hidden="true">🔔</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Notifikasi</span>
+          <span class="block truncate text-sm font-medium text-muted">{{ notifSummary(auth.settings) }}</span>
+        </span>
         <span aria-hidden="true" class="text-muted">›</span>
       </button>
       <button class="menu-row" @click="go('settings-payments')">
-        <span>Metode pembayaran<span class="block text-sm font-medium text-muted">{{ paymentSummary(auth.settings.defaultPaymentMethods) }}</span></span>
+        <span class="menu-icon" aria-hidden="true">💳</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Metode pembayaran</span>
+          <span class="block truncate text-sm font-medium text-muted">{{ paymentSummary(auth.settings.defaultPaymentMethods) }}</span>
+        </span>
         <span aria-hidden="true" class="text-muted">›</span>
       </button>
     </section>
 
     <p class="eyebrow mt-6">Akun</p>
     <section class="card mt-2 !py-0">
-      <button class="menu-row" @click="go('settings-password')"><span>Ubah password</span><span aria-hidden="true" class="text-muted">›</span></button>
-      <button class="menu-row" @click="go('settings-claim')"><span>Pindahkan tagihan dari perangkat ini</span><span aria-hidden="true" class="text-muted">›</span></button>
-      <button class="menu-row text-danger" @click="logout"><span>Keluar</span></button>
+      <button class="menu-row" @click="go('settings-password')">
+        <span class="menu-icon" aria-hidden="true">🔑</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Ubah password</span>
+        </span>
+        <span aria-hidden="true" class="text-muted">›</span>
+      </button>
+      <button class="menu-row" @click="go('settings-claim')">
+        <span class="menu-icon" aria-hidden="true">📦</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Pindahkan tagihan dari perangkat ini</span>
+        </span>
+        <span aria-hidden="true" class="text-muted">›</span>
+      </button>
+      <button class="menu-row text-danger" @click="logout">
+        <span class="menu-icon" aria-hidden="true">🚪</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate">Keluar</span>
+        </span>
+      </button>
     </section>
 
     <p class="mt-8 text-center text-sm text-muted">Tagihanku versi 1.0</p>

@@ -27,6 +27,11 @@ onMounted(async () => {
 
 const active = computed(() => bills.value.filter((b) => b.status === 'ACTIVE'))
 const done = computed(() => bills.value.filter((b) => b.status === 'DONE'))
+const greetName = computed(() => {
+  if (!auth.loggedIn) return 'kamu'
+  const first = (auth.user?.name || '').trim().split(/\s+/)[0]
+  return first || ''
+})
 const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
 </script>
 
@@ -54,7 +59,7 @@ const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
     </header>
 
     <section class="card relative mt-4 overflow-hidden !bg-hero p-5 text-hero-ink">
-      <p class="text-[11px] font-extrabold uppercase tracking-widest opacity-80">Halo, {{ auth.loggedIn && auth.user ? auth.user.name : 'kamu' }}!</p>
+      <p class="text-[11px] font-extrabold uppercase tracking-widest opacity-80">{{ greetName ? `Halo, ${greetName}!` : 'Halo!' }}</p>
       <h2 class="mt-1 text-3xl font-extrabold leading-tight">{{ active.length ? 'Masih ada yang nunggu' : 'Yuk mulai!' }}</h2>
       <p class="mt-1 max-w-[60%] text-sm font-semibold opacity-90">
         {{ active.length ? `${active.length} tagihan belum lunas semua.` : 'Bikin split bill pertamamu, gampang kok.' }}

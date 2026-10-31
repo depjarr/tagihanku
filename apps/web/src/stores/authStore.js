@@ -12,6 +12,8 @@ const DEFAULT_SETTINGS = {
 }
 
 const store = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v) } catch { /* mode privat */ } }
+const USER_KEY = 'tagihanku.user'
+const loadUser = () => { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null') } catch { return null } }
 const load = (k) => { try { return localStorage.getItem(k) || '' } catch { return '' } }
 
 let poll = null
@@ -19,7 +21,7 @@ let poll = null
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: load(AUTH_KEY),
-    user: null,
+    user: load(AUTH_KEY) ? loadUser() : null,
     settings: { ...DEFAULT_SETTINGS, theme: load(THEME_KEY) || 'light', accent: load(ACCENT_KEY) || DEFAULT_ACCENT },
     unread: 0,
     ready: false,
@@ -42,6 +44,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const [user, settings] = await Promise.all([authApi.me(), authApi.getSettings()])
         this.user = user
+        store(USER_KEY, JSON.stringify(user))
         this.setSettings(settings)
         this.refreshUnread()
         this.startPolling()
@@ -54,6 +57,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = res.token
       this.user = res.user
       store(AUTH_KEY, res.token)
+      store(USER_KEY, JSON.stringify(res.user))
       // tagihan yang dibuat sebagai tamu di perangkat ini ikut ditautkan ke akun
       const local = myBills.all().map((b) => ({ id: b.id, token: b.token }))
       if (local.length) { try { await authApi.claimBills(local) } catch { /* tidak fatal */ } }
@@ -70,6 +74,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       this.unread = 0
       store(AUTH_KEY, null)
+      store(USER_KEY, null)
       this.stopPolling()
     },
 
