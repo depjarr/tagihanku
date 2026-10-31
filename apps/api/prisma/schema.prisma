@@ -152,7 +152,7 @@ model UserSettings {
   notifyEmail    Boolean @default(false) @map("notify_email")
   notifyOpened   Boolean @default(false) @map("notify_opened")
   notifyDone     Boolean @default(true) @map("notify_done")
-  accent         String  @default("biru") @db.VarChar(12) // biru | merah | kuning | hijau | ungu | peach
+  accent         String  @default("biru") @db.VarChar(12) // biru | merah | kuning | hijau | ungu | peach | kidcore | pixel | fairy | apple
   defaultPaymentMethods Json @default("[]") @map("default_payment_methods")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -189,4 +189,27 @@ model Notification {
 
   @@index([userId, createdAt])
   @@map("notifications")
+}
+
+model SplitRecord {
+  userId          String   @map("user_id") @db.Uuid
+  recordId        String   @map("record_id") @db.VarChar(64)
+  data            Json     @default("{}")
+  deleted         Boolean  @default(false)
+  clientUpdatedAt DateTime @map("client_updated_at") @db.Timestamptz(6)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@id([userId, recordId])
+  @@map("split_records")
+}
+
+model SplitProfile {
+  userId          String   @id @map("user_id") @db.Uuid
+  paymentMethods  Json     @default("[]") @map("payment_methods")
+  friends         Json     @default("[]")
+  clientUpdatedAt DateTime @default(now()) @map("client_updated_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("split_profiles")
 }
