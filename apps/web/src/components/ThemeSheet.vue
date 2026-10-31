@@ -1,14 +1,21 @@
 <script setup>
 // Lembar tampilan di beranda: pilih warna utama + mode (terang/gelap/sistem) + nama pembuat tagihan.
 // Pilihan langsung berubah dan tersimpan (tamu: di perangkat ini; login: ikut ke akun).
+import { computed } from 'vue'
 import { ACCENTS, MODES } from '../composables/useAccent'
 import { useAuthStore } from '../stores/authStore'
 import { toast } from '../composables/useToast'
 
-defineProps({ modelValue: { type: String, default: 'Kamu' } }) // dipakai lewat v-model="ownerName"
+const props = defineProps({ modelValue: { type: String, default: undefined } }) // v-model = nama pembuat (hanya di beranda)
+const hasName = computed(() => props.modelValue !== undefined)
 const emit = defineEmits(['close', 'update:modelValue', 'replay-intro'])
 
 const auth = useAuthStore()
+
+const groups = [
+  { title: 'Warna utama', cols: 'grid-cols-3', items: ACCENTS.filter((a) => a.kind !== 'tema') },
+  { title: 'Tema seru', cols: 'grid-cols-2', items: ACCENTS.filter((a) => a.kind === 'tema') },
+]
 
 async function pick(patch) {
   try { await auth.saveSettings(patch) } catch { toast.info('Tampilan belum bisa disimpan ke akunmu, coba lagi ya.') }
@@ -26,11 +33,11 @@ async function pick(patch) {
         <button class="circle-btn" aria-label="Tutup" @click="emit('close')">✕</button>
       </div>
 
-      <div class="space-y-1.5">
-        <label class="text-[11px] font-extrabold text-muted uppercase tracking-wider">Warna utama</label>
-        <div class="grid grid-cols-3 gap-2">
+      <div v-for="g in groups" :key="g.title" class="space-y-1.5">
+        <label class="text-[11px] font-extrabold text-muted uppercase tracking-wider">{{ g.title }}</label>
+        <div class="grid gap-2" :class="g.cols">
           <button
-            v-for="c in ACCENTS" :key="c.value" type="button"
+            v-for="c in g.items" :key="c.value" type="button"
             class="relative flex flex-col items-center gap-1.5 rounded-2xl border-2 px-2 py-3 transition active:scale-[.97]"
             :class="auth.settings.accent === c.value ? 'border-edge bg-brand-soft shadow-sticker-sm' : 'border-line bg-surface'"
             :aria-pressed="auth.settings.accent === c.value"
@@ -38,6 +45,7 @@ async function pick(patch) {
           >
             <span class="h-8 w-8 rounded-full border-2 border-edge/70" :style="{ background: c.swatch }" />
             <span class="text-xs font-extrabold text-ink">{{ c.label }}</span>
+            <span v-if="c.note" class="-mt-1 text-[10px] font-semibold text-muted">{{ c.note }}</span>
             <span v-if="auth.settings.accent === c.value" class="absolute top-1.5 right-1.5 text-[10px] font-black bg-brand text-on-brand rounded-full w-5 h-5 flex items-center justify-center">✓</span>
           </button>
         </div>
@@ -56,12 +64,12 @@ async function pick(patch) {
         </div>
       </div>
 
-      <div class="space-y-1.5">
+      <div v-if="hasName" class="space-y-1.5">
         <label class="text-[11px] font-extrabold text-muted uppercase tracking-wider">Namamu (muncul di pesan tagihan)</label>
         <input :value="modelValue" class="field" maxlength="24" placeholder="Kamu" @input="emit('update:modelValue', $event.target.value)" />
       </div>
 
-      <button class="btn-soft w-full py-2.5 text-xs" @click="emit('replay-intro')">👋 Lihat pengenalan lagi</button>
+      <button v-if="hasName" class="btn-soft w-full py-2.5 text-xs" @click="emit('replay-intro')">👋 Lihat pengenalan lagi</button>
     </div>
   </div>
 </template>

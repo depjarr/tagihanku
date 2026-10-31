@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Pixelify+Sans:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -43,32 +43,32 @@
 }
 
 /* aksen - terang */
-:root[data-accent='biru'] {
+:root:not(.dark)[data-accent='biru'] {
   --brand: 29 78 140;  --brand-soft: 222 233 247;  --brand-ink: 18 52 98;  --on-brand: 255 252 246;
   --hero: 26 69 125;  --hero-ink: 255 247 232;  --cat-bg: 250 220 120;
 }
 
-:root[data-accent='merah'] {
+:root:not(.dark)[data-accent='merah'] {
   --brand: 214 70 96;  --brand-soft: 252 227 232;  --brand-ink: 122 28 52;  --on-brand: 255 255 255;
   --hero: 214 70 96;  --hero-ink: 255 248 246;  --cat-bg: 255 226 230;
 }
 
-:root[data-accent='kuning'] {
+:root:not(.dark)[data-accent='kuning'] {
   --brand: 236 168 28;  --brand-soft: 254 243 205;  --brand-ink: 112 76 4;  --on-brand: 52 36 6;
   --hero: 236 168 28;  --hero-ink: 52 36 6;  --cat-bg: 252 232 150;
 }
 
-:root[data-accent='hijau'] {
+:root:not(.dark)[data-accent='hijau'] {
   --brand: 84 140 82;  --brand-soft: 226 240 222;  --brand-ink: 30 76 36;  --on-brand: 255 255 255;
   --hero: 58 112 66;  --hero-ink: 250 252 240;  --cat-bg: 232 244 200;
 }
 
-:root[data-accent='ungu'] {
+:root:not(.dark)[data-accent='ungu'] {
   --brand: 124 92 196;  --brand-soft: 238 232 252;  --brand-ink: 63 42 115;  --on-brand: 255 255 255;
   --hero: 104 72 176;  --hero-ink: 250 246 255;  --cat-bg: 226 214 248;
 }
 
-:root[data-accent='peach'] {
+:root:not(.dark)[data-accent='peach'] {
   --brand: 226 120 34;  --brand-soft: 254 232 208;  --brand-ink: 128 62 8;  --on-brand: 255 255 255;
   --hero: 226 120 34;  --hero-ink: 255 249 238;  --cat-bg: 254 222 170;
 }
@@ -103,6 +103,187 @@
   --brand: 244 160 96;  --brand-soft: 66 46 34;  --brand-ink: 252 206 164;  --on-brand: 44 22 8;
   --hero: 150 82 32;  --hero-ink: 255 244 232;
 }
+
+/* tema paket - terang */
+:root:not(.dark)[data-accent='kidcore'] {
+  --page: 255 248 220;
+  --surface: 255 255 255;
+  --ink: 18 28 100;
+  --muted: 84 96 150;
+  --line: 214 222 246;
+  --edge: 18 28 120;
+  --brand: 30 90 210;
+  --brand-soft: 224 235 255;
+  --brand-ink: 16 48 130;
+  --on-brand: 255 255 255;
+  --accent: 226 36 52;
+  --accent-soft: 255 226 228;
+  --hero: 30 90 210;
+  --hero-ink: 255 250 225;
+  --cat-bg: 255 214 0;
+}
+
+:root:not(.dark)[data-accent='pixel'] {
+  --page: 224 248 208;
+  --surface: 244 252 236;
+  --ink: 15 56 15;
+  --muted: 56 104 56;
+  --line: 168 200 120;
+  --edge: 15 56 15;
+  --brand: 48 98 48;
+  --brand-soft: 208 232 176;
+  --brand-ink: 15 56 15;
+  --on-brand: 224 248 208;
+  --accent: 160 40 40;
+  --accent-soft: 244 214 200;
+  --hero: 48 98 48;
+  --hero-ink: 224 248 208;
+  --cat-bg: 155 188 15;
+}
+
+:root:not(.dark)[data-accent='fairy'] {
+  --page: 253 244 255;
+  --surface: 255 251 255;
+  --ink: 70 40 108;
+  --muted: 140 112 172;
+  --line: 236 216 246;
+  --edge: 126 88 176;
+  --brand: 168 110 222;
+  --brand-soft: 243 230 253;
+  --brand-ink: 92 52 150;
+  --on-brand: 255 255 255;
+  --accent: 236 104 166;
+  --accent-soft: 253 226 240;
+  --hero: 176 120 228;
+  --hero-ink: 255 255 255;
+  --cat-bg: 244 214 250;
+}
+
+:root:not(.dark)[data-accent='apple'] {
+  --page: 252 246 224;
+  --surface: 255 253 243;
+  --ink: 62 12 12;
+  --muted: 140 104 84;
+  --line: 234 222 172;
+  --edge: 74 10 10;
+  --brand: 208 38 24;
+  --brand-soft: 253 228 220;
+  --brand-ink: 145 6 8;
+  --on-brand: 255 255 255;
+  --accent: 168 18 18;
+  --accent-soft: 253 228 222;
+  --hero: 145 6 8;
+  --hero-ink: 245 222 143;
+  --cat-bg: 181 209 76;
+}
+
+/* tema paket - gelap */
+:root.dark[data-accent='kidcore'] {
+  --page: 14 18 52;
+  --surface: 26 34 86;
+  --ink: 255 248 220;
+  --muted: 170 182 230;
+  --line: 52 64 130;
+  --edge: 6 8 30;
+  --brand: 255 204 0;
+  --brand-soft: 66 58 24;
+  --brand-ink: 255 226 110;
+  --on-brand: 22 28 80;
+  --accent: 255 96 108;
+  --accent-soft: 80 36 50;
+  --hero: 36 78 200;
+  --hero-ink: 255 250 225;
+  --cat-bg: 36 78 200;
+}
+
+:root.dark[data-accent='pixel'] {
+  --page: 15 24 15;
+  --surface: 26 40 26;
+  --ink: 200 236 150;
+  --muted: 128 168 100;
+  --line: 46 72 40;
+  --edge: 4 8 4;
+  --brand: 155 188 15;
+  --brand-soft: 38 54 18;
+  --brand-ink: 205 235 100;
+  --on-brand: 15 40 15;
+  --accent: 240 110 90;
+  --accent-soft: 70 36 30;
+  --hero: 48 98 48;
+  --hero-ink: 224 248 208;
+  --cat-bg: 48 98 48;
+}
+
+:root.dark[data-accent='fairy'] {
+  --page: 28 20 46;
+  --surface: 42 30 66;
+  --ink: 250 236 255;
+  --muted: 192 162 222;
+  --line: 76 58 110;
+  --edge: 12 6 24;
+  --brand: 208 160 255;
+  --brand-soft: 62 42 92;
+  --brand-ink: 232 204 255;
+  --on-brand: 40 16 72;
+  --accent: 255 140 190;
+  --accent-soft: 80 36 66;
+  --hero: 120 70 190;
+  --hero-ink: 255 244 255;
+  --cat-bg: 100 64 160;
+}
+
+:root.dark[data-accent='apple'] {
+  --page: 36 8 8;
+  --surface: 56 16 14;
+  --ink: 250 236 190;
+  --muted: 200 170 130;
+  --line: 100 40 34;
+  --edge: 14 2 2;
+  --brand: 181 209 76;
+  --brand-soft: 52 58 22;
+  --brand-ink: 216 236 120;
+  --on-brand: 34 44 0;
+  --accent: 255 130 120;
+  --accent-soft: 80 30 28;
+  --hero: 145 6 8;
+  --hero-ink: 245 222 143;
+  --cat-bg: 98 140 30;
+}
+
+/* gaya tambahan per tema */
+:root[data-accent='kidcore'] body {
+  background-image: radial-gradient(rgb(255 204 0 / .28) 2.5px, transparent 2.5px);
+  background-size: 26px 26px;
+}
+:root.dark[data-accent='kidcore'] body { background-image: radial-gradient(rgb(255 204 0 / .10) 2.5px, transparent 2.5px); }
+
+:root[data-accent='apple'] body {
+  background-image: radial-gradient(rgb(181 209 76 / .45) 3.5px, transparent 3.5px);
+  background-size: 30px 30px;
+}
+:root.dark[data-accent='apple'] body { background-image: radial-gradient(rgb(181 209 76 / .12) 3.5px, transparent 3.5px); }
+
+:root[data-accent='fairy'] body {
+  background-image:
+    radial-gradient(circle at 12% 8%, rgb(255 205 235 / .65), transparent 38%),
+    radial-gradient(circle at 90% 24%, rgb(200 225 255 / .65), transparent 40%),
+    radial-gradient(circle at 30% 95%, rgb(205 250 230 / .55), transparent 40%);
+  background-attachment: fixed;
+}
+:root.dark[data-accent='fairy'] body {
+  background-image:
+    radial-gradient(circle at 12% 8%, rgb(180 80 160 / .25), transparent 38%),
+    radial-gradient(circle at 90% 24%, rgb(90 110 220 / .22), transparent 40%);
+}
+:root[data-accent='fairy'] .bg-hero, :root[data-accent='fairy'] .\!bg-hero {
+  background-image: linear-gradient(135deg, rgb(196 150 244), rgb(246 164 208));
+}
+:root.dark[data-accent='fairy'] .bg-hero, :root.dark[data-accent='fairy'] .\!bg-hero {
+  background-image: linear-gradient(135deg, rgb(108 64 184), rgb(168 72 140));
+}
+
+:root[data-accent='pixel'] body { font-family: 'Pixelify Sans', ui-monospace, monospace; letter-spacing: 0; }
+:root[data-accent='pixel'] *:not([class*='rounded-full']):not(.circle-btn) { border-radius: 0; }
 
 /* ============================================================ */
 

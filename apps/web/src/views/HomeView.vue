@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import CatMascot from '../components/CatMascot.vue'
+import ThemeSheet from '../components/ThemeSheet.vue'
 import { authApi } from '../api/auth'
 import { billsApi } from '../api/bills'
 import { useAuthStore } from '../stores/authStore'
@@ -12,6 +13,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const bills = ref([])
 const loading = ref(true)
+const showTheme = ref(false)
 const error = ref('')
 
 onMounted(async () => {
@@ -46,7 +48,7 @@ const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button class="circle-btn" aria-label="Tampilan" @click="router.push({ name: 'settings-appearance' })">🎨</button>
+        <button class="circle-btn" aria-label="Tampilan" @click="showTheme = true">🎨</button>
         <template v-if="auth.loggedIn">
           <button class="circle-btn relative" aria-label="Notifikasi" @click="router.push({ name: 'notifications' })">
             🔔
@@ -113,5 +115,6 @@ const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
     <div class="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-md bg-gradient-to-t from-page via-page to-transparent px-4 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <button class="btn-primary w-full py-4 text-base" @click="router.push({ name: 'new' })"><span class="text-xl leading-none">+</span> Buat split bill baru</button>
     </div>
+    <ThemeSheet v-if="showTheme" @close="showTheme = false" />
   </main>
 </template>
