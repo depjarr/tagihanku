@@ -4,6 +4,8 @@ import { RouterLink, useRoute } from 'vue-router'
 import { authApi } from '../api/auth'
 import AuthLayout from '../components/AuthLayout.vue'
 import PasswordField from '../components/PasswordField.vue'
+import PasswordRules from '../components/PasswordRules.vue'
+import { passwordError } from '../composables/usePassword'
 
 const token = String(useRoute().query.token || '')
 const form = reactive({ password: '', confirm: '' })
@@ -13,7 +15,8 @@ const loading = ref(false)
 
 async function submit() {
   error.value = ''
-  if (form.password.length < 8) return (error.value = 'Kata sandi minimal 8 karakter')
+  const pe = passwordError(form.password)
+  if (pe) return (error.value = pe)
   if (form.password !== form.confirm) return (error.value = 'Konfirmasi kata sandi tidak sama')
   loading.value = true
   try {
@@ -34,7 +37,8 @@ async function submit() {
       <p v-if="error" class="notice">{{ error }}</p>
       <div>
         <label class="label" for="password">Kata sandi baru</label>
-        <PasswordField id="password" v-model="form.password" autocomplete="new-password" placeholder="Minimal 8 karakter" />
+        <PasswordField id="password" v-model="form.password" autocomplete="new-password" placeholder="Buat password baru" />
+        <PasswordRules :password="form.password" />
       </div>
       <div>
         <label class="label" for="confirm">Ulangi kata sandi</label>

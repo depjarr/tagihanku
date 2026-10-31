@@ -4,6 +4,8 @@ import { RouterLink, useRouter } from 'vue-router'
 import AuthLayout from '../components/AuthLayout.vue'
 import GoogleSignIn from '../components/GoogleSignIn.vue'
 import PasswordField from '../components/PasswordField.vue'
+import PasswordRules from '../components/PasswordRules.vue'
+import { passwordError } from '../composables/usePassword'
 import { useAuthStore } from '../stores/authStore'
 
 const auth = useAuthStore()
@@ -16,7 +18,8 @@ async function submit() {
   error.value = ''
   if (!form.name.trim()) return (error.value = 'Isi namamu')
   if (!form.email.trim()) return (error.value = 'Isi email')
-  if (form.password.length < 8) return (error.value = 'Kata sandi minimal 8 karakter')
+  const pe = passwordError(form.password)
+  if (pe) return (error.value = pe)
   if (!form.agree) return (error.value = 'Centang persetujuan syarat dan kebijakan privasi dulu')
   loading.value = true
   try {
@@ -45,7 +48,8 @@ async function submit() {
       </div>
       <div>
         <label class="label" for="password">Password</label>
-        <PasswordField id="password" v-model="form.password" autocomplete="new-password" placeholder="Minimal 8 karakter" />
+        <PasswordField id="password" v-model="form.password" autocomplete="new-password" placeholder="Buat password" />
+        <PasswordRules :password="form.password" />
       </div>
       <p class="text-sm text-muted">Tagihan yang kamu buat tanpa akun di HP ini bisa dipindahkan ke akunmu.</p>
       <label class="flex items-start gap-3 text-sm">

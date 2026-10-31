@@ -3,6 +3,8 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '../../api/auth'
 import PasswordField from '../../components/PasswordField.vue'
+import PasswordRules from '../../components/PasswordRules.vue'
+import { passwordError } from '../../composables/usePassword'
 import { useAuthStore } from '../../stores/authStore'
 
 const auth = useAuthStore()
@@ -18,7 +20,8 @@ function toForgot() {
 
 async function submit() {
   error.value = msg.value = ''
-  if (pw.next.length < 8) return (error.value = 'Kata sandi baru minimal 8 karakter')
+  const pe = passwordError(pw.next)
+  if (pe) return (error.value = pe)
   if (pw.next !== pw.confirm) return (error.value = 'Konfirmasi kata sandi tidak sama')
   try {
     await authApi.changePassword(pw.current, pw.next)
@@ -42,7 +45,7 @@ async function submit() {
       <p v-if="msg" class="notice-ok">{{ msg }}</p>
       <p v-if="error" class="notice">{{ error }}</p>
       <div><label class="label" for="cur">Kata sandi saat ini</label><PasswordField id="cur" v-model="pw.current" /></div>
-      <div><label class="label" for="new">Kata sandi baru</label><PasswordField id="new" v-model="pw.next" autocomplete="new-password" placeholder="Minimal 8 karakter" /></div>
+      <div><label class="label" for="new">Kata sandi baru</label><PasswordField id="new" v-model="pw.next" autocomplete="new-password" placeholder="Buat password baru" /><PasswordRules :password="pw.next" /></div>
       <div><label class="label" for="conf">Ulangi kata sandi baru</label><PasswordField id="conf" v-model="pw.confirm" autocomplete="new-password" /></div>
       <button class="btn-primary">Ganti kata sandi</button>
     </form>

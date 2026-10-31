@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 const lower = ({ value }: { value: unknown }) => (typeof value === 'string' ? value.trim().toLowerCase() : value);
 
@@ -11,6 +11,8 @@ export class RegisterDto {
   email: string;
 
   @IsString() @MinLength(8, { message: 'Kata sandi minimal 8 karakter' }) @MaxLength(72)
+  @Matches(/[A-Z]/, { message: 'Kata sandi harus punya minimal 1 huruf besar' })
+  @Matches(/[^A-Za-z0-9]/, { message: 'Kata sandi harus punya minimal 1 simbol (mis. * & !)' })
   password: string;
 }
 
@@ -37,6 +39,8 @@ export class ResetPasswordDto {
   token: string;
 
   @IsString() @MinLength(8, { message: 'Kata sandi minimal 8 karakter' }) @MaxLength(72)
+  @Matches(/[A-Z]/, { message: 'Kata sandi harus punya minimal 1 huruf besar' })
+  @Matches(/[^A-Za-z0-9]/, { message: 'Kata sandi harus punya minimal 1 simbol (mis. * & !)' })
   password: string;
 }
 
@@ -45,6 +49,8 @@ export class ChangePasswordDto {
   currentPassword: string;
 
   @IsString() @MinLength(8, { message: 'Kata sandi minimal 8 karakter' }) @MaxLength(72)
+  @Matches(/[A-Z]/, { message: 'Kata sandi harus punya minimal 1 huruf besar' })
+  @Matches(/[^A-Za-z0-9]/, { message: 'Kata sandi harus punya minimal 1 simbol (mis. * & !)' })
   newPassword: string;
 }
 

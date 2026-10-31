@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import CatMascot from '../components/CatMascot.vue'
 import { authApi } from '../api/auth'
 import { billsApi } from '../api/bills'
 import { useAuthStore } from '../stores/authStore'
@@ -30,47 +31,60 @@ const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
 </script>
 
 <template>
-  <main class="screen">
-    <div class="flex items-center justify-between gap-3">
-      <h1 class="text-4xl font-extrabold">Tagihan</h1>
-      <div v-if="auth.loggedIn" class="flex items-center gap-2">
-        <button class="btn-pill relative !px-3" aria-label="Notifikasi" @click="router.push({ name: 'notifications' })">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-          <span v-if="auth.unread" class="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-danger px-1 text-center text-[11px] font-bold leading-[18px] text-white">{{ auth.unread > 9 ? '9+' : auth.unread }}</span>
-        </button>
-        <button class="btn-pill !px-3" aria-label="Pengaturan" @click="router.push({ name: 'settings' })">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </button>
+  <main class="screen !pb-28">
+    <header class="flex items-center justify-between gap-3 pt-1">
+      <div class="flex items-center gap-2.5">
+        <CatMascot :size="46" mood="happy" />
+        <div>
+          <h1 class="font-bold text-2xl leading-none text-ink">Tagihanku</h1>
+          <p class="mt-0.5 text-[11px] font-bold text-muted">{{ auth.loggedIn ? 'Split bill santai' : 'Split bill santai, tanpa login' }}</p>
+        </div>
       </div>
-      <div v-else class="flex items-center gap-2">
-        <button class="btn-pill !px-3" aria-label="Tampilan" @click="router.push({ name: 'settings-appearance' })">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.9-4.5-9-10-9z"/></svg>
-        </button>
-        <button class="btn-pill" @click="router.push({ name: 'login' })">Masuk</button>
+      <div class="flex items-center gap-2">
+        <button class="circle-btn" aria-label="Tampilan" @click="router.push({ name: 'settings-appearance' })">🎨</button>
+        <template v-if="auth.loggedIn">
+          <button class="circle-btn relative" aria-label="Notifikasi" @click="router.push({ name: 'notifications' })">
+            🔔
+            <span v-if="auth.unread" class="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-danger px-1 text-center text-[11px] font-bold leading-[18px] text-white">{{ auth.unread > 9 ? '9+' : auth.unread }}</span>
+          </button>
+          <button class="circle-btn" aria-label="Pengaturan" @click="router.push({ name: 'settings' })">⚙️</button>
+        </template>
+        <button v-else class="btn-pill" @click="router.push({ name: 'login' })">Masuk</button>
       </div>
-    </div>
+    </header>
 
-    <p v-if="!auth.loggedIn" class="card mt-4 text-sm text-muted">
+    <section class="card relative mt-4 overflow-hidden !bg-hero p-5 text-hero-ink">
+      <p class="text-[11px] font-extrabold uppercase tracking-widest opacity-80">Halo, {{ auth.loggedIn && auth.user ? auth.user.name : 'kamu' }}!</p>
+      <h2 class="mt-1 text-3xl font-extrabold leading-tight">{{ active.length ? 'Masih ada yang nunggu' : 'Yuk mulai!' }}</h2>
+      <p class="mt-1 max-w-[60%] text-sm font-semibold opacity-90">
+        {{ active.length ? `${active.length} tagihan belum lunas semua.` : 'Bikin split bill pertamamu, gampang kok.' }}
+      </p>
+      <div class="absolute -bottom-2 right-3"><CatMascot :size="104" mood="hi" bare /></div>
+    </section>
+
+    <p v-if="!auth.loggedIn" class="card-flat mt-4 p-3 text-xs font-bold text-muted">
       Masuk agar tagihanmu tersimpan di semua perangkat dan kamu dapat pengingat otomatis.
-      <RouterLink :to="{ name: 'register' }" class="font-bold text-brand-ink">Daftar gratis</RouterLink>
+      <RouterLink :to="{ name: 'register' }" class="font-extrabold text-brand-ink">Daftar gratis</RouterLink>
     </p>
-    <p v-if="loading" class="mt-6 text-muted">Memuat…</p>
     <p v-if="error" class="notice mt-4">{{ error }}</p>
 
-    <p v-if="!loading && !bills.length && !error" class="card mt-6 text-center text-muted">
-      Belum ada tagihan. Mulai dengan split bill pertamamu.
-    </p>
+    <p class="eyebrow mt-6">Riwayat tagihan ({{ bills.length }})</p>
+    <p v-if="loading" class="mt-3 text-sm font-bold text-muted">Memuat…</p>
+
+    <div v-else-if="!bills.length && !error" class="card gingham mt-3 px-6 py-10 text-center">
+      <div class="text-4xl">🧾</div>
+      <p class="mt-3 font-extrabold text-ink">Belum ada tagihan tersimpan</p>
+      <p class="mt-1 text-sm font-bold text-muted">Tekan tombol di bawah untuk bikin yang pertama.</p>
+    </div>
 
     <template v-if="active.length">
-      <p class="eyebrow mt-6">Aktif ({{ active.length }})</p>
-      <button v-for="b in active" :key="b.id" class="card mt-2 block w-full border-warn text-left" @click="open(b)">
+      <p class="eyebrow mt-5">Aktif ({{ active.length }})</p>
+      <button v-for="b in active" :key="b.id" class="card mt-2 block w-full p-4 text-left active:translate-y-[2px] active:shadow-none transition" @click="open(b)">
         <div class="flex items-center justify-between gap-2">
           <b class="text-lg">{{ b.title }}</b>
-          <span class="rounded-full bg-warn-soft px-3 py-1 text-xs font-bold text-warn-ink">
-            {{ b.summary.paidCount }} dari {{ b.participants.length }} bayar
-          </span>
+          <span class="chip bg-warn-soft text-warn-ink">{{ b.summary.paidCount }} dari {{ b.participants.length }} bayar</span>
         </div>
-        <div class="mt-1 flex items-end justify-between text-sm text-muted">
+        <div class="mt-1 flex items-end justify-between text-sm font-bold text-muted">
           <span>{{ formatDate(b.billDate) }} · sisa {{ rupiah(b.summary.remaining) }}</span>
           <b class="text-lg text-ink">{{ rupiah(b.summary.grandTotal) }}</b>
         </div>
@@ -78,19 +92,21 @@ const open = (b) => router.push({ name: 'summary', params: { id: b.id } })
     </template>
 
     <template v-if="done.length">
-      <p class="eyebrow mt-6">Selesai ({{ done.length }})</p>
-      <button v-for="b in done" :key="b.id" class="card mt-2 block w-full text-left" @click="open(b)">
+      <p class="eyebrow mt-5">Selesai ({{ done.length }})</p>
+      <button v-for="b in done" :key="b.id" class="card mt-2 block w-full p-4 text-left active:translate-y-[2px] active:shadow-none transition" @click="open(b)">
         <div class="flex items-center justify-between gap-2">
           <b class="text-lg">{{ b.title }}</b>
-          <span class="rounded-full bg-ok-soft px-3 py-1 text-xs font-bold text-ok-ink">Lunas</span>
+          <span class="chip bg-ok-soft text-ok-ink">Lunas</span>
         </div>
-        <div class="mt-1 flex items-end justify-between text-sm text-muted">
+        <div class="mt-1 flex items-end justify-between text-sm font-bold text-muted">
           <span>{{ formatDate(b.billDate) }} · {{ b.participants.length }} orang</span>
           <b class="text-lg text-ink">{{ rupiah(b.summary.grandTotal) }}</b>
         </div>
       </button>
     </template>
 
-    <div class="bar"><button class="btn-primary" @click="router.push({ name: 'new' })">+ Split bill baru</button></div>
+    <div class="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-md bg-gradient-to-t from-page via-page to-transparent px-4 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <button class="btn-primary w-full py-4 text-base" @click="router.push({ name: 'new' })"><span class="text-xl leading-none">+</span> Buat split bill baru</button>
+    </div>
   </main>
 </template>
