@@ -21,7 +21,7 @@ const auth = useAuthStore()
 const goAccount = () => router.push({ name: auth.loggedIn ? 'settings' : 'login' })
 
 // Ubah ke true kalau pengenalan mau muncul setiap aplikasi dibuka (bukan hanya pertama kali).
-const SHOW_WELCOME_EVERY_VISIT = false
+const SHOW_WELCOME_EVERY_VISIT = true
 
 // ==========================================
 // 1. STATE NAVIGASI (STEP 0 - 8)
@@ -731,6 +731,7 @@ watch([() => auth.user?.name, () => participants.value.find((p) => p.isOwner)?.n
 // ==========================================
 function finishWelcome() {
   showWelcome.value = false
+  window.__welcomeShown = true // jangan muncul lagi selama halaman belum di-reload
   try { localStorage.setItem(KEY_WELCOME, '1') } catch { /* mode privat */ }
 }
 function replayIntro() {
@@ -754,7 +755,7 @@ onMounted(() => {
 
   let seen = false
   try { seen = localStorage.getItem(KEY_WELCOME) === '1' } catch { /* mode privat */ }
-  showWelcome.value = SHOW_WELCOME_EVERY_VISIT || !seen
+  showWelcome.value = (SHOW_WELCOME_EVERY_VISIT || !seen) && !window.__welcomeShown
 
   if (auth.user?.id) syncFromServer()
 })
