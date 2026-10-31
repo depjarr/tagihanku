@@ -144,6 +144,42 @@ input[type='number'] { -moz-appearance: textfield; }
     @apply w-full rounded-2xl bg-page border border-line px-3 py-2.5 text-xs font-bold outline-none
            focus:border-brand focus:ring-2 focus:ring-brand/20;
   }
+  /* ---- kelas bersama untuk halaman lama (login, daftar, pengaturan, editor, ringkasan, link bagi) ---- */
+  .screen {
+    @apply mx-auto w-full max-w-md min-h-[100dvh] px-4 pt-5 pb-10;
+  }
+  .eyebrow {
+    @apply text-[11px] font-extrabold uppercase tracking-widest text-muted;
+  }
+  .h1 {
+    @apply font-extrabold text-3xl leading-tight text-ink mt-1;
+  }
+  .label {
+    @apply block mb-1.5 text-xs font-extrabold text-ink;
+  }
+  .input {
+    @apply w-full rounded-2xl bg-surface border-2 border-edge px-4 py-3 text-sm font-bold text-ink outline-none
+           shadow-sticker-sm focus:border-brand focus:ring-2 focus:ring-brand/20;
+  }
+  .notice {
+    @apply rounded-2xl border-2 border-edge bg-accent-soft px-4 py-3 text-xs font-extrabold leading-snug text-accent;
+  }
+  .notice-ok {
+    @apply rounded-2xl border-2 border-edge bg-ok-soft px-4 py-3 text-xs font-extrabold leading-snug text-ok-ink;
+  }
+  .btn-pill {
+    @apply btn bg-surface text-ink px-4 py-2 text-xs shadow-sticker-sm;
+  }
+  .btn-outline {
+    @apply btn bg-surface text-ink w-full px-4 py-3 text-sm;
+  }
+  .btn-dashed {
+    @apply w-full rounded-2xl border-2 border-dashed border-edge/50 bg-transparent px-4 py-3 text-xs font-extrabold text-muted
+           active:translate-y-[1px] transition;
+  }
+  /* tombol utama / lembut default: lebar penuh & lega saat dipakai di form */
+  form .btn-primary { @apply w-full py-3.5 text-base; }
+
   .circle-btn {
     @apply w-9 h-9 rounded-full bg-surface border-2 border-edge shadow-sticker-sm flex items-center justify-center
            font-bold text-sm active:translate-y-[1px] active:shadow-none transition;
