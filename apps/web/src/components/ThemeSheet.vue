@@ -13,8 +13,9 @@ const emit = defineEmits(['close', 'update:modelValue', 'replay-intro'])
 const auth = useAuthStore()
 
 const groups = [
-  { title: 'Warna utama', cols: 'grid-cols-3', items: ACCENTS.filter((a) => a.kind !== 'tema') },
+  { title: 'Warna utama', cols: 'grid-cols-3', items: ACCENTS.filter((a) => !a.kind) },
   { title: 'Tema seru', cols: 'grid-cols-2', items: ACCENTS.filter((a) => a.kind === 'tema') },
+  { title: 'Palet merah', cols: 'grid-cols-3', items: ACCENTS.filter((a) => a.kind === 'palet') },
 ]
 
 async function pick(patch) {
@@ -43,7 +44,10 @@ async function pick(patch) {
             :aria-pressed="auth.settings.accent === c.value"
             @click="pick({ accent: c.value })"
           >
-            <span class="h-8 w-8 rounded-full border-2 border-edge/70" :style="{ background: c.swatch }" />
+            <span v-if="c.colors" class="flex flex-col items-center">
+              <span v-for="(col, i) in c.colors" :key="i" class="h-7 w-7 rounded-full border border-edge/30" :class="i ? '-mt-2.5' : ''" :style="{ background: col, opacity: .93 }" />
+            </span>
+            <span v-else class="h-8 w-8 rounded-full border-2 border-edge/70" :style="{ background: c.swatch }" />
             <span class="text-xs font-extrabold text-ink">{{ c.label }}</span>
             <span v-if="c.note" class="-mt-1 text-[10px] font-semibold text-muted">{{ c.note }}</span>
             <span v-if="auth.settings.accent === c.value" class="absolute top-1.5 right-1.5 text-[10px] font-black bg-brand text-on-brand rounded-full w-5 h-5 flex items-center justify-center">✓</span>

@@ -123,22 +123,23 @@
   --cat-bg: 255 214 0;
 }
 
+/* pixel: palet warna-warni ala pixel art (ungu - magenta - oranye - kuning) */
 :root:not(.dark)[data-accent='pixel'] {
-  --page: 224 248 208;
-  --surface: 244 252 236;
-  --ink: 15 56 15;
-  --muted: 56 104 56;
-  --line: 168 200 120;
-  --edge: 15 56 15;
-  --brand: 48 98 48;
-  --brand-soft: 208 232 176;
-  --brand-ink: 15 56 15;
-  --on-brand: 224 248 208;
-  --accent: 160 40 40;
-  --accent-soft: 244 214 200;
-  --hero: 48 98 48;
-  --hero-ink: 224 248 208;
-  --cat-bg: 155 188 15;
+  --page: 255 244 220;
+  --surface: 255 252 240;
+  --ink: 36 12 56;
+  --muted: 110 70 120;
+  --line: 232 208 190;
+  --edge: 36 12 56;
+  --brand: 150 40 110;
+  --brand-soft: 250 214 230;
+  --brand-ink: 80 16 70;
+  --on-brand: 255 244 220;
+  --accent: 255 120 0;
+  --accent-soft: 255 230 190;
+  --hero: 96 24 120;
+  --hero-ink: 255 236 160;
+  --cat-bg: 255 190 0;
 }
 
 :root:not(.dark)[data-accent='fairy'] {
@@ -196,22 +197,23 @@
   --cat-bg: 36 78 200;
 }
 
+/* pixel (gelap) */
 :root.dark[data-accent='pixel'] {
-  --page: 15 24 15;
-  --surface: 26 40 26;
-  --ink: 200 236 150;
-  --muted: 128 168 100;
-  --line: 46 72 40;
-  --edge: 4 8 4;
-  --brand: 155 188 15;
-  --brand-soft: 38 54 18;
-  --brand-ink: 205 235 100;
-  --on-brand: 15 40 15;
-  --accent: 240 110 90;
-  --accent-soft: 70 36 30;
-  --hero: 48 98 48;
-  --hero-ink: 224 248 208;
-  --cat-bg: 48 98 48;
+  --page: 20 8 36;
+  --surface: 36 16 56;
+  --ink: 255 236 190;
+  --muted: 200 160 190;
+  --line: 70 36 90;
+  --edge: 8 2 16;
+  --brand: 255 140 30;
+  --brand-soft: 70 30 20;
+  --brand-ink: 255 196 120;
+  --on-brand: 30 8 40;
+  --accent: 230 80 160;
+  --accent-soft: 70 24 56;
+  --hero: 110 30 130;
+  --hero-ink: 255 236 160;
+  --cat-bg: 150 40 170;
 }
 
 :root.dark[data-accent='fairy'] {
@@ -282,8 +284,338 @@
   background-image: linear-gradient(135deg, rgb(108 64 184), rgb(168 72 140));
 }
 
+/* palet merah: 3 warna per tema (terang + gelap) */
+:root:not(.dark)[data-accent='cherry'] {
+  --page: 255 241 242;
+  --surface: 255 251 251;
+  --ink: 60 14 18;
+  --muted: 142 115 118;
+  --line: 228 209 210;
+  --edge: 60 14 18;
+  --brand: 214 50 65;
+  --brand-soft: 249 226 228;
+  --brand-ink: 90 21 27;
+  --on-brand: 255 255 255;
+  --accent: 255 192 195;
+  --accent-soft: 255 239 240;
+  --hero: 214 50 65;
+  --hero-ink: 255 246 246;
+  --cat-bg: 255 192 195;
+}
+
+:root.dark[data-accent='cherry'] {
+  --page: 21 5 6;
+  --surface: 39 9 12;
+  --ink: 255 227 228;
+  --muted: 162 138 139;
+  --line: 68 16 21;
+  --edge: 13 3 4;
+  --brand: 223 95 107;
+  --brand-soft: 81 19 25;
+  --brand-ink: 239 177 183;
+  --on-brand: 21 5 6;
+  --accent: 255 198 201;
+  --accent-soft: 71 54 55;
+  --hero: 167 39 51;
+  --hero-ink: 255 242 243;
+  --cat-bg: 191 144 146;
+}
+
+:root:not(.dark)[data-accent='ruby'] {
+  --page: 247 248 248;
+  --surface: 253 253 253;
+  --ink: 46 0 10;
+  --muted: 134 107 113;
+  --line: 219 214 214;
+  --edge: 46 0 10;
+  --brand: 164 0 36;
+  --brand-soft: 242 219 224;
+  --brand-ink: 69 0 15;
+  --on-brand: 255 255 255;
+  --accent: 179 222 225;
+  --accent-soft: 236 247 248;
+  --hero: 164 0 36;
+  --hero-ink: 250 250 250;
+  --cat-bg: 179 222 225;
+}
+
+:root.dark[data-accent='ruby'] {
+  --page: 16 0 4;
+  --surface: 30 0 6;
+  --ink: 239 242 240;
+  --muted: 150 145 146;
+  --line: 52 0 12;
+  --edge: 10 0 2;
+  --brand: 184 56 84;
+  --brand-soft: 62 0 14;
+  --brand-ink: 220 158 172;
+  --on-brand: 255 255 255;
+  --accent: 187 225 228;
+  --accent-soft: 50 62 63;
+  --hero: 128 0 28;
+  --hero-ink: 248 249 248;
+  --cat-bg: 134 166 169;
+}
+
+:root:not(.dark)[data-accent='coral'] {
+  --page: 245 246 228;
+  --surface: 252 253 248;
+  --ink: 67 30 30;
+  --muted: 146 124 124;
+  --line: 220 216 201;
+  --edge: 67 30 30;
+  --brand: 239 106 106;
+  --brand-soft: 253 234 234;
+  --brand-ink: 100 45 45;
+  --on-brand: 67 30 30;
+  --accent: 208 214 134;
+  --accent-soft: 243 245 225;
+  --hero: 239 106 106;
+  --hero-ink: 67 30 30;
+  --cat-bg: 208 214 134;
+}
+
+:root.dark[data-accent='coral'] {
+  --page: 24 11 11;
+  --surface: 43 19 19;
+  --ink: 234 237 201;
+  --muted: 150 146 125;
+  --line: 76 34 34;
+  --edge: 14 6 6;
+  --brand: 243 139 139;
+  --brand-soft: 91 40 40;
+  --brand-ink: 249 198 198;
+  --on-brand: 24 11 11;
+  --accent: 213 218 146;
+  --accent-soft: 58 60 38;
+  --hero: 186 83 83;
+  --hero-ink: 246 247 231;
+  --cat-bg: 156 160 100;
+}
+
+:root:not(.dark)[data-accent='brick'] {
+  --page: 254 253 248;
+  --surface: 255 254 253;
+  --ink: 57 20 17;
+  --muted: 140 119 117;
+  --line: 226 220 216;
+  --edge: 57 20 17;
+  --brand: 205 72 59;
+  --brand-soft: 248 229 228;
+  --brand-ink: 86 30 25;
+  --on-brand: 255 255 255;
+  --accent: 118 139 171;
+  --accent-soft: 221 226 234;
+  --hero: 205 72 59;
+  --hero-ink: 254 254 250;
+  --cat-bg: 118 139 171;
+}
+
+:root.dark[data-accent='brick'] {
+  --page: 20 7 6;
+  --surface: 37 13 11;
+  --ink: 252 251 241;
+  --muted: 160 153 147;
+  --line: 66 23 19;
+  --edge: 12 4 4;
+  --brand: 216 112 102;
+  --brand-soft: 78 27 22;
+  --brand-ink: 236 185 181;
+  --on-brand: 20 7 6;
+  --accent: 132 151 179;
+  --accent-soft: 33 39 48;
+  --hero: 160 56 46;
+  --hero-ink: 254 253 249;
+  --cat-bg: 88 104 128;
+}
+
+:root:not(.dark)[data-accent='poppy'] {
+  --page: 249 243 252;
+  --surface: 253 252 254;
+  --ink: 63 19 14;
+  --muted: 143 118 115;
+  --line: 223 212 219;
+  --edge: 63 19 14;
+  --brand: 224 67 51;
+  --brand-soft: 251 229 226;
+  --brand-ink: 94 28 21;
+  --on-brand: 255 255 255;
+  --accent: 229 200 241;
+  --accent-soft: 248 241 252;
+  --hero: 224 67 51;
+  --hero-ink: 251 247 253;
+  --cat-bg: 229 200 241;
+}
+
+:root.dark[data-accent='poppy'] {
+  --page: 22 7 5;
+  --surface: 40 12 9;
+  --ink: 243 230 249;
+  --muted: 155 141 151;
+  --line: 72 21 16;
+  --edge: 13 4 3;
+  --brand: 231 108 96;
+  --brand-soft: 85 25 19;
+  --brand-ink: 243 184 177;
+  --on-brand: 22 7 5;
+  --accent: 232 206 242;
+  --accent-soft: 64 56 67;
+  --hero: 175 52 40;
+  --hero-ink: 250 244 252;
+  --cat-bg: 172 150 181;
+}
+
+:root:not(.dark)[data-accent='tomato'] {
+  --page: 248 253 224;
+  --surface: 253 254 246;
+  --ink: 58 25 19;
+  --muted: 141 122 118;
+  --line: 221 221 195;
+  --edge: 58 25 19;
+  --brand: 208 89 69;
+  --brand-soft: 248 232 229;
+  --brand-ink: 87 37 29;
+  --on-brand: 255 255 255;
+  --accent: 223 246 113;
+  --accent-soft: 247 253 220;
+  --hero: 208 89 69;
+  --hero-ink: 250 254 234;
+  --cat-bg: 223 246 113;
+}
+
+:root.dark[data-accent='tomato'] {
+  --page: 21 9 7;
+  --surface: 37 16 12;
+  --ink: 241 251 191;
+  --muted: 153 154 117;
+  --line: 67 28 22;
+  --edge: 12 5 4;
+  --brand: 218 126 110;
+  --brand-soft: 79 34 26;
+  --brand-ink: 237 192 184;
+  --on-brand: 21 9 7;
+  --accent: 226 247 127;
+  --accent-soft: 62 69 32;
+  --hero: 162 69 54;
+  --hero-ink: 249 253 227;
+  --cat-bg: 167 184 85;
+}
+
+:root:not(.dark)[data-accent='garnet'] {
+  --page: 246 245 242;
+  --surface: 253 252 252;
+  --ink: 45 7 7;
+  --muted: 133 111 111;
+  --line: 218 212 210;
+  --edge: 45 7 7;
+  --brand: 160 26 26;
+  --brand-soft: 242 223 223;
+  --brand-ink: 67 11 11;
+  --on-brand: 255 255 255;
+  --accent: 214 209 198;
+  --accent-soft: 245 244 241;
+  --hero: 160 26 26;
+  --hero-ink: 249 248 246;
+  --cat-bg: 214 209 198;
+}
+
+:root.dark[data-accent='garnet'] {
+  --page: 16 3 3;
+  --surface: 29 5 5;
+  --ink: 237 234 229;
+  --muted: 148 142 139;
+  --line: 51 8 8;
+  --edge: 10 2 2;
+  --brand: 181 76 76;
+  --brand-soft: 61 10 10;
+  --brand-ink: 219 168 168;
+  --on-brand: 255 255 255;
+  --accent: 218 214 204;
+  --accent-soft: 60 59 55;
+  --hero: 125 20 20;
+  --hero-ink: 247 246 244;
+  --cat-bg: 160 157 148;
+}
+
+:root:not(.dark)[data-accent='holly'] {
+  --page: 254 251 238;
+  --surface: 255 254 250;
+  --ink: 27 1 1;
+  --muted: 123 108 108;
+  --line: 222 216 205;
+  --edge: 27 1 1;
+  --brand: 96 5 5;
+  --brand-soft: 233 220 220;
+  --brand-ink: 40 2 2;
+  --on-brand: 255 255 255;
+  --accent: 84 103 37;
+  --accent-soft: 212 217 200;
+  --hero: 96 5 5;
+  --hero-ink: 255 252 244;
+  --cat-bg: 84 103 37;
+}
+
+:root.dark[data-accent='holly'] {
+  --page: 10 0 0;
+  --surface: 17 1 1;
+  --ink: 254 247 221;
+  --muted: 156 148 133;
+  --line: 31 2 2;
+  --edge: 6 0 0;
+  --brand: 131 60 60;
+  --brand-soft: 36 2 2;
+  --brand-ink: 195 160 160;
+  --on-brand: 255 255 255;
+  --accent: 101 118 59;
+  --accent-soft: 24 29 10;
+  --hero: 75 4 4;
+  --hero-ink: 254 251 240;
+  --cat-bg: 63 77 28;
+}
+
+:root:not(.dark)[data-accent='cocoa'] {
+  --page: 234 226 220;
+  --surface: 249 247 246;
+  --ink: 57 18 13;
+  --muted: 140 118 115;
+  --line: 209 197 191;
+  --edge: 57 18 13;
+  --brand: 202 66 46;
+  --brand-soft: 248 229 226;
+  --brand-ink: 85 28 19;
+  --on-brand: 255 255 255;
+  --accent: 89 68 59;
+  --accent-soft: 214 208 206;
+  --hero: 202 66 46;
+  --hero-ink: 240 235 231;
+  --cat-bg: 89 68 59;
+}
+
+:root.dark[data-accent='cocoa'] {
+  --page: 20 7 5;
+  --surface: 36 12 8;
+  --ink: 211 195 184;
+  --muted: 135 119 112;
+  --line: 65 21 15;
+  --edge: 12 4 3;
+  --brand: 214 108 92;
+  --brand-soft: 77 25 17;
+  --brand-ink: 235 183 176;
+  --on-brand: 20 7 5;
+  --accent: 106 87 79;
+  --accent-soft: 25 19 17;
+  --hero: 158 51 36;
+  --hero-ink: 236 228 223;
+  --cat-bg: 67 51 44;
+}
+
 :root[data-accent='pixel'] body { font-family: 'Pixelify Sans', ui-monospace, monospace; letter-spacing: 0; }
 :root[data-accent='pixel'] *:not([class*='rounded-full']):not(.circle-btn) { border-radius: 0; }
+
+/* pixel: pita warna ala deretan palet di pojok kanan bawah kartu utama */
+:root[data-accent='pixel'] .bg-hero, :root[data-accent='pixel'] .\!bg-hero {
+  background-image: linear-gradient(135deg, rgb(var(--hero)) 0 70%, rgb(255 120 0) 70% 80%, rgb(255 200 0) 80% 90%, rgb(46 122 20) 90%);
+}
 
 /* ============================================================ */
 

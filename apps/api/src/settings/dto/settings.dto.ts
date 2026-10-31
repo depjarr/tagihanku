@@ -2,7 +2,8 @@ import { Type } from 'class-transformer';
 import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsInt, IsOptional, Max, Min, ValidateNested } from 'class-validator';
 import { PaymentMethodDto } from '../../bills/dto/create-bill.dto';
 
-export const ACCENTS = ['biru', 'merah', 'kuning', 'hijau', 'ungu', 'peach', 'kidcore', 'pixel', 'fairy', 'apple'] as const;
+export const ACCENTS = ['biru', 'merah', 'kuning', 'hijau', 'ungu', 'peach', 'kidcore', 'pixel', 'fairy', 'apple',
+  'cherry', 'ruby', 'coral', 'brick', 'poppy', 'tomato', 'garnet', 'holly', 'cocoa'] as const;
 
 export class UpdateSettingsDto {
   @IsOptional() @IsIn(['light', 'dark', 'system'])
