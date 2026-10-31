@@ -5,15 +5,16 @@
 @tailwind utilities;
 
 /* ============================================================
-   TEMA WARNA  — ganti lewat <html data-theme="...">
+   TEMA = MODE (terang / gelap / sistem)  x  AKSEN (6 warna pastel)
+   Dipasang di <html> oleh composables/useAccent.js:
+     <html class="dark" data-accent="hijau">
    Semua angka = "R G B" supaya Tailwind bisa pakai opacity (bg-brand/20).
-   Tambah tema baru: salin satu blok, ganti nilainya, lalu daftarkan di
-   src/composables/useTheme.js
+   Tambah warna baru: salin satu blok aksen terang + satu blok aksen gelap,
+   lalu daftarkan di ACCENTS (useAccent.js) dan settings.dto.ts di API.
    ============================================================ */
 
-/* 1) Roti Kucing — krem + biru laut + merah tomat (terinspirasi tema HP kucing hitam) */
-:root,
-:root[data-theme='roti'] {
+/* terang (bawaan) */
+:root {
   --page: 250 244 232;      --surface: 255 252 246;
   --ink: 38 32 30;          --muted: 118 106 94;
   --line: 229 217 193;      --edge: 43 36 33;
@@ -27,80 +28,80 @@
   --cat-bg: 250 220 120;
 }
 
-/* 2) Kue Biru — biru bubuk + krem (terinspirasi toko kue o'feeling) */
-:root[data-theme='kue'] {
-  --page: 251 247 238;      --surface: 255 253 248;
-  --ink: 52 44 42;          --muted: 128 116 110;
-  --line: 224 218 204;      --edge: 78 62 62;
-  --brand: 104 150 196;     --brand-soft: 224 236 247;   --brand-ink: 38 76 118;    --on-brand: 255 255 255;
-  --accent: 178 54 56;      --accent-soft: 250 228 226;
-  --sun: 236 196 98;        --sun-soft: 253 242 210;
-  --hero: 127 170 212;      --hero-ink: 255 255 255;
-  --ok: 52 140 98;          --ok-soft: 226 244 235;      --ok-ink: 24 92 62;
-  --warn: 217 140 30;       --warn-soft: 254 244 214;    --warn-ink: 120 76 12;
-  --danger: 178 54 56;
-  --cat-bg: 255 240 214;
-}
-
-/* 3) Stroberi — pink + krem */
-:root[data-theme='stroberi'] {
-  --page: 255 244 243;      --surface: 255 251 250;
-  --ink: 60 34 40;          --muted: 140 106 112;
-  --line: 244 214 216;      --edge: 92 40 52;
-  --brand: 214 70 96;       --brand-soft: 252 227 232;   --brand-ink: 122 28 52;    --on-brand: 255 255 255;
-  --accent: 190 40 70;      --accent-soft: 252 226 230;
-  --sun: 246 190 90;        --sun-soft: 254 240 212;
-  --hero: 214 70 96;        --hero-ink: 255 248 246;
-  --ok: 40 134 90;          --ok-soft: 224 243 233;      --ok-ink: 20 88 58;
-  --warn: 217 130 10;       --warn-soft: 254 243 199;    --warn-ink: 120 70 5;
-  --danger: 190 40 70;
-  --cat-bg: 255 226 230;
-}
-
-/* 4) Matcha — hijau + krem */
-:root[data-theme='matcha'] {
-  --page: 245 247 236;      --surface: 252 253 247;
-  --ink: 36 44 32;          --muted: 108 120 98;
-  --line: 218 226 200;      --edge: 40 54 38;
-  --brand: 84 140 82;       --brand-soft: 226 240 222;   --brand-ink: 30 76 36;     --on-brand: 255 255 255;
-  --accent: 206 86 52;      --accent-soft: 252 230 220;
-  --sun: 232 184 58;        --sun-soft: 252 242 208;
-  --hero: 58 112 66;        --hero-ink: 250 252 240;
-  --ok: 40 130 70;          --ok-soft: 222 242 228;      --ok-ink: 18 84 44;
-  --warn: 217 130 10;       --warn-soft: 254 243 199;    --warn-ink: 120 70 5;
-  --danger: 200 60 50;
-  --cat-bg: 232 244 200;
-}
-
-/* 5) Donat — oranye + krem */
-:root[data-theme='donat'] {
-  --page: 255 246 232;      --surface: 255 252 245;
-  --ink: 60 38 22;          --muted: 138 110 88;
-  --line: 240 220 190;      --edge: 82 48 24;
-  --brand: 226 120 34;      --brand-soft: 254 232 208;   --brand-ink: 128 62 8;     --on-brand: 255 255 255;
-  --accent: 192 52 40;      --accent-soft: 251 226 220;
-  --sun: 244 190 60;        --sun-soft: 254 242 205;
-  --hero: 226 120 34;       --hero-ink: 255 249 238;
-  --ok: 40 134 80;          --ok-soft: 224 243 230;      --ok-ink: 18 88 50;
-  --warn: 190 110 10;       --warn-soft: 254 240 196;    --warn-ink: 110 62 4;
-  --danger: 192 52 40;
-  --cat-bg: 254 222 170;
-}
-
-/* 6) Malam — gelap, biru tua */
-:root[data-theme='malam'] {
+/* gelap */
+:root.dark {
   --page: 20 26 40;         --surface: 31 39 58;
   --ink: 244 238 226;       --muted: 160 168 186;
   --line: 52 62 86;         --edge: 8 12 22;
-  --brand: 242 176 52;      --brand-soft: 58 52 40;      --brand-ink: 252 214 130;  --on-brand: 24 28 40;
   --accent: 240 112 100;    --accent-soft: 72 40 46;
   --sun: 242 176 52;        --sun-soft: 64 56 38;
-  --hero: 38 58 104;        --hero-ink: 250 244 230;
   --ok: 94 200 140;         --ok-soft: 28 62 50;         --ok-ink: 150 230 184;
   --warn: 242 176 52;       --warn-soft: 64 56 38;       --warn-ink: 252 214 130;
   --danger: 240 112 100;
   --cat-bg: 60 76 120;
   color-scheme: dark;
+}
+
+/* aksen - terang */
+:root[data-accent='biru'] {
+  --brand: 29 78 140;  --brand-soft: 222 233 247;  --brand-ink: 18 52 98;  --on-brand: 255 252 246;
+  --hero: 26 69 125;  --hero-ink: 255 247 232;  --cat-bg: 250 220 120;
+}
+
+:root[data-accent='merah'] {
+  --brand: 214 70 96;  --brand-soft: 252 227 232;  --brand-ink: 122 28 52;  --on-brand: 255 255 255;
+  --hero: 214 70 96;  --hero-ink: 255 248 246;  --cat-bg: 255 226 230;
+}
+
+:root[data-accent='kuning'] {
+  --brand: 236 168 28;  --brand-soft: 254 243 205;  --brand-ink: 112 76 4;  --on-brand: 52 36 6;
+  --hero: 236 168 28;  --hero-ink: 52 36 6;  --cat-bg: 252 232 150;
+}
+
+:root[data-accent='hijau'] {
+  --brand: 84 140 82;  --brand-soft: 226 240 222;  --brand-ink: 30 76 36;  --on-brand: 255 255 255;
+  --hero: 58 112 66;  --hero-ink: 250 252 240;  --cat-bg: 232 244 200;
+}
+
+:root[data-accent='ungu'] {
+  --brand: 124 92 196;  --brand-soft: 238 232 252;  --brand-ink: 63 42 115;  --on-brand: 255 255 255;
+  --hero: 104 72 176;  --hero-ink: 250 246 255;  --cat-bg: 226 214 248;
+}
+
+:root[data-accent='peach'] {
+  --brand: 226 120 34;  --brand-soft: 254 232 208;  --brand-ink: 128 62 8;  --on-brand: 255 255 255;
+  --hero: 226 120 34;  --hero-ink: 255 249 238;  --cat-bg: 254 222 170;
+}
+
+/* aksen - gelap */
+:root.dark[data-accent='biru'] {
+  --brand: 106 160 224;  --brand-soft: 36 52 80;  --brand-ink: 170 205 245;  --on-brand: 12 20 36;
+  --hero: 38 58 104;  --hero-ink: 250 244 230;
+}
+
+:root.dark[data-accent='merah'] {
+  --brand: 240 120 140;  --brand-soft: 68 36 44;  --brand-ink: 252 180 192;  --on-brand: 40 12 20;
+  --hero: 150 48 70;  --hero-ink: 255 240 242;
+}
+
+:root.dark[data-accent='kuning'] {
+  --brand: 242 176 52;  --brand-soft: 58 52 40;  --brand-ink: 252 214 130;  --on-brand: 24 28 40;
+  --hero: 120 92 20;  --hero-ink: 255 246 220;
+}
+
+:root.dark[data-accent='hijau'] {
+  --brand: 110 190 130;  --brand-soft: 30 58 44;  --brand-ink: 170 228 190;  --on-brand: 12 32 20;
+  --hero: 42 92 64;  --hero-ink: 238 252 240;
+}
+
+:root.dark[data-accent='ungu'] {
+  --brand: 168 140 236;  --brand-soft: 46 40 76;  --brand-ink: 208 192 250;  --on-brand: 24 16 48;
+  --hero: 82 62 150;  --hero-ink: 246 242 255;
+}
+
+:root.dark[data-accent='peach'] {
+  --brand: 244 160 96;  --brand-soft: 66 46 34;  --brand-ink: 252 206 164;  --on-brand: 44 22 8;
+  --hero: 150 82 32;  --hero-ink: 255 244 232;
 }
 
 /* ============================================================ */

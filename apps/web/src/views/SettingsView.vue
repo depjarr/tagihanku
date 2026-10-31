@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
-import { describeLook } from '../composables/useAccent'
-import { notifSummary, paymentSummary } from '../composables/useSummaries'
+import { notifSummary } from '../composables/useSummaries'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -31,27 +30,11 @@ function logout() {
 
     <p class="eyebrow mt-6">Aplikasi</p>
     <section class="card mt-2 !py-0">
-      <button class="menu-row" @click="go('settings-appearance')">
-        <span class="menu-icon" aria-hidden="true">🎨</span>
-        <span class="min-w-0 flex-1">
-          <span class="block truncate">Tampilan</span>
-          <span class="block truncate text-sm font-medium text-muted">{{ describeLook(auth.settings.accent, auth.settings.theme) }}</span>
-        </span>
-        <span aria-hidden="true" class="text-muted">›</span>
-      </button>
       <button class="menu-row" @click="go('settings-notifications')">
         <span class="menu-icon" aria-hidden="true">🔔</span>
         <span class="min-w-0 flex-1">
           <span class="block truncate">Notifikasi</span>
           <span class="block truncate text-sm font-medium text-muted">{{ notifSummary(auth.settings) }}</span>
-        </span>
-        <span aria-hidden="true" class="text-muted">›</span>
-      </button>
-      <button class="menu-row" @click="go('settings-payments')">
-        <span class="menu-icon" aria-hidden="true">💳</span>
-        <span class="min-w-0 flex-1">
-          <span class="block truncate">Metode pembayaran</span>
-          <span class="block truncate text-sm font-medium text-muted">{{ paymentSummary(auth.settings.defaultPaymentMethods) }}</span>
         </span>
         <span aria-hidden="true" class="text-muted">›</span>
       </button>

@@ -9,7 +9,6 @@ import { prepareReceiptImage } from '../composables/useReceiptImage'
 import { computeSplit, itemShares, itemMembers, itemWeights, modeBalance, distribute, SPLIT_MODES } from '../composables/useSplit'
 import { formatRupiah, formatDate, makeReceiptNo } from '../composables/format'
 import { toast, askConfirm } from '../composables/useToast'
-import { initTheme } from '../composables/useTheme'
 import CameraCapture from '../components/CameraCapture.vue'
 import CatMascot from '../components/CatMascot.vue'
 import PaidReceiptModal from '../components/PaidReceiptModal.vue'
@@ -742,7 +741,6 @@ function replayIntro() {
 const SAMPLE_NUMBERS = new Set(['1234567890', '081234567890'])
 
 onMounted(() => {
-  initTheme()
   loadSavedBills()
 
   paymentMethods.value = read(KEY_PAYMENTS, [])
