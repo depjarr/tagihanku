@@ -1,22 +1,19 @@
 <!doctype html>
-<html lang="id" data-accent="biru">
+<html lang="id" data-theme="roti">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#BBD6F5" />
+    <meta name="theme-color" content="#1A457D" />
     <title>Tagihanku · Patungan tagihan</title>
     <meta name="description" content="Tagihanku: bagi tagihan makan bareng, scan struk, dan tagih teman lewat WhatsApp atau QRIS." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
     <script>
+      // pasang tema tersimpan sebelum render pertama supaya tidak "berkedip"
       try {
-        var t = localStorage.getItem('splitbill.theme') || 'light';
-        var a = localStorage.getItem('splitbill.accent') || 'biru';
-        var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-        document.documentElement.classList.toggle('dark', dark);
-        document.documentElement.setAttribute('data-accent', a);
+        var t = localStorage.getItem('tagihanku_theme') || 'roti';
+        document.documentElement.setAttribute('data-theme', t);
       } catch (e) {}
     </script>
     <div id="app"></div>
