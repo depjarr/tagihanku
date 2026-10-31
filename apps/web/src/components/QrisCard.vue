@@ -42,7 +42,7 @@ async function download() {
     </div>
     <template v-if="dynamic">
       <!-- QR selalu hitam di atas putih, apa pun tema, supaya terbaca aplikasi bank -->
-      <div class="mx-auto mt-3 w-fit rounded-2xl bg-white p-2"><canvas ref="canvas" class="block" /></div>
+      <div class="mx-auto mt-3 w-full max-w-[18rem] aspect-square overflow-hidden rounded-2xl bg-white p-2"><canvas ref="canvas" class="!block !w-full !h-full" /></div>
       <dl class="mt-3 space-y-1 text-sm">
         <div class="flex justify-between gap-3"><dt class="text-muted">Penerima</dt><dd class="text-right font-bold">{{ merchant }}</dd></div>
         <div class="flex justify-between gap-3"><dt class="text-muted">Nominal</dt><dd class="font-bold">{{ rupiah(amount) }}</dd></div>

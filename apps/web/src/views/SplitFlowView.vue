@@ -74,14 +74,24 @@ const selectedMembers = computed(() => memberIds.value.map(memberById))
 
 const saveRoster = () => { write(KEY_FRIENDS, participants.value); queueProfile() }
 
+/** Nomor WA wajib format internasional: diawali 62, hanya angka, 10–15 digit. Kosong = boleh (opsional). */
+const WA_RE = /^62\d{8,13}$/
+const waInvalid = computed(() => newFriend.wa !== '' && !WA_RE.test(newFriend.wa))
+// bersihkan input: buang semua karakter non-angka (spasi, +, -, dll) saat mengetik
+watch(() => newFriend.wa, (v) => {
+  const clean = String(v || '').replace(/\D/g, '').slice(0, 15)
+  if (clean !== v) newFriend.wa = clean
+})
+
 function addNewFriend() {
   const name = newFriend.name.trim()
   if (!name) return toast.info('Isi nama temanmu dulu ya.')
+  if (waInvalid.value) return toast.warn('Nomor WhatsApp harus diawali 62 (contoh: 6281234567890), bukan 08…')
   if (participants.value.some((p) => p.name.toLowerCase() === name.toLowerCase())) return toast.warn('Nama teman itu sudah ada.')
   const avatars = ['🐰', '🐻', '🐼', '🦊', '🐶', '🐣', '🐨', '🐹']
   const bgs = ['#FADBD8', '#FDEBD0', '#D4E6F1', '#E8DAEF', '#D1F2EB', '#FCF3CF']
   const p = {
-    id: 'friend_' + Date.now(), name, phone: 'Teman', wa: newFriend.wa.replace(/[^\d+]/g, ''),
+    id: 'friend_' + Date.now(), name, phone: 'Teman', wa: newFriend.wa,
     bg: bgs[Math.floor(Math.random() * bgs.length)], avatar: avatars[Math.floor(Math.random() * avatars.length)],
     isOwner: false,
   }
@@ -1021,7 +1031,14 @@ onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
               <input v-model="newFriend.name" placeholder="Nama teman" class="field flex-1" @keyup.enter="addNewFriend" />
               <button class="btn-primary px-4 text-sm" aria-label="Tambah teman" @click="addNewFriend">+</button>
             </div>
-            <input v-model="newFriend.wa" inputmode="tel" placeholder="No. WhatsApp (opsional, biar langsung kebuka)" class="field" @keyup.enter="addNewFriend" />
+            <input v-model="newFriend.wa" inputmode="numeric" autocomplete="off" maxlength="15" placeholder="No. WhatsApp (opsional), contoh 6281234567890" class="field"
+              :class="waInvalid ? 'border-danger focus:border-danger focus:ring-danger/20' : ''" :aria-invalid="waInvalid" aria-describedby="wa-hint" @keyup.enter="addNewFriend" />
+            <p id="wa-hint" class="text-[10px] font-semibold leading-snug" :class="waInvalid ? 'text-danger' : 'text-muted'">
+              Wajib diawali <b>62</b> (bukan 0 atau +), hanya angka. Contoh: 6281234567890.
+              <span v-if="waInvalid && newFriend.wa.startsWith('0')"> Ganti 0 di depan jadi 62.</span>
+              <span v-else-if="waInvalid && newFriend.wa.length >= 2 && !newFriend.wa.startsWith('62')"> Nomor belum diawali 62.</span>
+              <span v-else-if="waInvalid && newFriend.wa.startsWith('62')"> Panjang nomor belum sesuai (10–15 digit).</span>
+            </p>
           </div>
         </div>
 
@@ -1286,7 +1303,7 @@ onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
     <!-- MODAL: QRIS NOMINAL PAS                                  -->
     <!-- ======================================================== -->
     <div v-if="activeQrisModal" class="fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-4" @click.self="activeQrisModal = null">
-      <div class="card w-full max-w-xs p-5 text-center space-y-3 animate-slide-up">
+      <div class="card w-full max-w-xs p-5 text-center space-y-3 animate-slide-up overflow-hidden max-h-[92dvh] overflow-y-auto">
         <div class="flex items-start justify-between pb-2 border-b border-line">
           <div class="text-left">
             <span class="chip bg-ok-soft text-ok-ink">Nominal terkunci</span>
@@ -1295,8 +1312,9 @@ onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
           <button class="circle-btn" aria-label="Tutup" @click="activeQrisModal = null">✕</button>
         </div>
 
-        <div class="bg-white p-2 rounded-2xl border-2 border-edge mx-auto w-fit">
-          <canvas ref="qrCanvas" class="w-56 h-56 block" aria-label="Kode QRIS" />
+        <!-- library qrcode menulis width/height inline (px) ke canvas, jadi dipaksa !important agar QR selalu pas di dalam kotak -->
+        <div class="bg-white p-2 rounded-2xl border-2 border-edge mx-auto w-full max-w-[14rem] aspect-square overflow-hidden">
+          <canvas ref="qrCanvas" class="!block !w-full !h-full" aria-label="Kode QRIS" />
         </div>
 
         <div class="space-y-0.5">
