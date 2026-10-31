@@ -61,12 +61,20 @@ ATURAN PENTING:
   "total": 58905
 }`;
 
-    const visionModels = [
-      { id: 'meta-llama/llama-4-scout-17b-16e-instruct', noReasoning: false },
-      { id: 'qwen/qwen3.8-27b', noReasoning: true },
-    ];
+    // llama-4-scout sudah dimatikan Groq (17 Jul 2026). Model vision yang tersedia: keluarga Qwen.
+    // Bisa diganti lewat env GROQ_VISION_MODELS (dipisah koma), mis. "qwen/qwen3.8-27b,qwen/qwen3.6-27b".
+    const envModels = (process.env.GROQ_VISION_MODELS || '').split(',').map((x) => x.trim()).filter(Boolean);
+    const visionModels = (envModels.length ? envModels : ['qwen/qwen3.8-27b', 'qwen/qwen3.6-27b']).map((id) => ({
+      id,
+      noReasoning: true, // matikan "thinking" supaya token keluaran habis untuk JSON, bukan penalaran
+    }));
 
-    let lastError = '';
+    // Batas token keluaran per menit di akun gratis Groq cuma 1000. Tanpa max_tokens, Groq menghitung 2048
+    // dan menolak request. JSON struk biasa ~300-600 token, jadi 800 cukup.
+    const MAX_OUTPUT_TOKENS = Number(process.env.GROQ_MAX_OUTPUT_TOKENS) || 800;
+
+    const errors: string[] = [];
+    let rateLimited = false;
 
     for (const m of visionModels) {
       try {
@@ -85,6 +93,7 @@ ATURAN PENTING:
           ],
           response_format: { type: 'json_object' },
           temperature: 0.1,
+          max_tokens: MAX_OUTPUT_TOKENS,
         };
 
         if (m.noReasoning) {
@@ -102,13 +111,18 @@ ATURAN PENTING:
 
         if (!response.ok) {
           const errBody = await response.text();
-          lastError = `Groq (${m.id} HTTP ${response.status}): ${errBody}`;
-          this.logger.error(lastError);
+          if (response.status === 429) rateLimited = true;
+          const detail = `Groq (${m.id} HTTP ${response.status}): ${errBody}`;
+          errors.push(detail);
+          this.logger.error(detail);
           continue;
         }
 
         const result = await response.json();
         const content = result.choices?.[0]?.message?.content;
+        if (result.choices?.[0]?.finish_reason === 'length') {
+          throw new Error('Jawaban AI terpotong (struk terlalu panjang untuk batas token)');
+        }
         const cleanJson = content.replace(/```json/g, '').replace(/```/g, '').trim();
         const parsed = JSON.parse(cleanJson);
 
@@ -128,11 +142,17 @@ ATURAN PENTING:
           total: Number(parsed.total) || 0,
         };
       } catch (err: any) {
-        lastError = err.message;
+        errors.push(`${m.id}: ${err.message}`);
         this.logger.error(`Error pada model ${m.id}: ${err.message}`);
       }
     }
 
-    throw new BadRequestException(lastError || 'Groq AI tidak dapat membaca struk.');
+    // Detail teknis (nama organisasi, batas token, dll) cukup di log server; pengguna dapat pesan ringkas.
+    this.logger.error(`Semua model gagal: ${errors.join(' | ')}`);
+    throw new BadRequestException(
+      rateLimited
+        ? 'Pembaca struk AI sedang kena batas pemakaian. Tunggu sekitar 1 menit lalu coba lagi, atau pakai "Isi manual".'
+        : 'Struk belum bisa dibaca AI. Coba foto ulang yang lebih jelas, atau pakai "Isi manual".',
+    );
   }
 }

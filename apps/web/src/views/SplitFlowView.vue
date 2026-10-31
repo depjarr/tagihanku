@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
+import { syncApi } from '../api/sync'
 import { toDynamicQris, isValidQris, merchantName, merchantNmid } from '../composables/useQris'
 import { decodeQrFromFile, drawQr, qrToDataUrl } from '../composables/useQrScan'
 import { prepareReceiptImage } from '../composables/useReceiptImage'
@@ -72,7 +73,7 @@ const memberById = (id) => participants.value.find((p) => p.id === id)
 const memberIds = computed(() => selectedMemberIds.value.filter((id) => memberById(id)))
 const selectedMembers = computed(() => memberIds.value.map(memberById))
 
-const saveRoster = () => write(KEY_FRIENDS, participants.value)
+const saveRoster = () => { write(KEY_FRIENDS, participants.value); queueProfile() }
 
 function addNewFriend() {
   const name = newFriend.name.trim()
@@ -280,6 +281,7 @@ function persistBill() {
   if (i > -1) savedBills.value[i] = rec
   else savedBills.value.unshift(rec)
   write(KEY_BILLS, savedBills.value)
+  queueBill({ id: rec.id, updatedAt: rec.updatedAt, data: rec })
 }
 
 function openSavedBill(b) {
@@ -294,8 +296,10 @@ function openSavedBill(b) {
 
 async function deleteCurrentBill() {
   if (!(await askConfirm({ title: 'Hapus tagihan ini?', message: 'Rincian dan semua struk lunasnya ikut terhapus. Tidak bisa dikembalikan.', okText: 'Hapus', danger: true }))) return
-  savedBills.value = savedBills.value.filter((b) => b.id !== currentBillId.value)
+  const delId = currentBillId.value
+  savedBills.value = savedBills.value.filter((b) => b.id !== delId)
   write(KEY_BILLS, savedBills.value)
+  queueBill({ id: delId, updatedAt: new Date().toISOString(), deleted: true })
   toast.info('Tagihan dihapus.')
   step.value = 0
 }
@@ -318,7 +322,7 @@ const readingQris = ref(false)
 const newPayment = reactive({ category: 'BANK', provider: 'BCA', accountNumber: '', accountName: '' })
 
 const hasQris = computed(() => paymentMethods.value.some((m) => m.category === 'QRIS' && m.qrisPayload))
-const savePaymentMethods = () => write(KEY_PAYMENTS, paymentMethods.value)
+const savePaymentMethods = () => { write(KEY_PAYMENTS, paymentMethods.value); queueProfile() }
 
 function addPaymentMethod() {
   if (!newPayment.provider.trim()) return toast.info('Isi nama bank / e-wallet-nya dulu ya.')
@@ -603,6 +607,119 @@ function sendWhatsApp(row) {
 }
 
 // ==========================================
+// 12. SINKRON KE AKUN (hanya aktif saat login)
+// ==========================================
+// Tagihan, metode pembayaran, dan daftar teman tetap disimpan di HP (jalan tanpa internet),
+// lalu disalin ke akun supaya muncul di semua perangkat. Aturan gabung: yang waktu ubahnya
+// lebih baru menang; tagihan yang dihapus ditandai (bukan hilang diam-diam) supaya tidak muncul lagi.
+const KEY_SYNC_OWNER = 'tagihanku_sync_owner' // id akun yang datanya ada di HP ini
+const KEY_PROFILE_AT = 'tagihanku_profile_updated_at'
+const accountId = () => auth.user?.id || ''
+const ts = (v) => { const n = Date.parse(v); return Number.isFinite(n) ? n : 0 }
+const dropKey = (k) => { try { localStorage.removeItem(k) } catch { /* mode privat */ } }
+let syncing = false
+let pending = new Map() // id -> { id, updatedAt, data | deleted }
+let billTimer = null
+let profileTimer = null
+
+async function flushBills() {
+  billTimer = null
+  if (!accountId() || !pending.size) return
+  const batch = [...pending.values()]
+  pending = new Map()
+  try {
+    for (let i = 0; i < batch.length; i += 10) await syncApi.pushBills(batch.slice(i, i + 10))
+  } catch { /* offline: rekaman lokal lebih baru, otomatis dikirim saat sinkron berikutnya */ }
+}
+
+function queueBill(entry) {
+  if (!accountId()) return
+  pending.set(entry.id, entry)
+  clearTimeout(billTimer)
+  billTimer = setTimeout(flushBills, 800)
+}
+
+function queueProfile() {
+  const at = new Date().toISOString()
+  try { localStorage.setItem(KEY_PROFILE_AT, at) } catch { /* mode privat */ }
+  if (!accountId()) return
+  clearTimeout(profileTimer)
+  profileTimer = setTimeout(async () => {
+    try {
+      await syncApi.pushProfile({
+        updatedAt: at,
+        paymentMethods: paymentMethods.value,
+        friends: participants.value.map(({ paid, ...p }) => p),
+      })
+    } catch { /* dicoba lagi saat sinkron berikutnya */ }
+  }, 800)
+}
+
+async function syncFromServer() {
+  const uid = accountId()
+  if (!uid || syncing) return
+  syncing = true
+  try {
+    let prevOwner = ''
+    try { prevOwner = localStorage.getItem(KEY_SYNC_OWNER) || '' } catch { /* mode privat */ }
+    if (prevOwner && prevOwner !== uid) {
+      // HP ini sebelumnya dipakai akun lain: jangan campur datanya ke akun ini
+      for (const k of [KEY_BILLS, KEY_PAYMENTS, KEY_FRIENDS, KEY_PROFILE_AT]) dropKey(k)
+      savedBills.value = []
+      paymentMethods.value = []
+      participants.value = [{ ...OWNER }]
+      selectedMemberIds.value = ['me']
+    }
+    const remote = await syncApi.pull()
+
+    // ---- tagihan
+    const merged = new Map(savedBills.value.map((b) => [b.id, b]))
+    const remoteById = new Map(remote.bills.map((r) => [r.id, r]))
+    for (const r of remote.bills) {
+      const l = merged.get(r.id)
+      if (l && ts(l.updatedAt) > ts(r.updatedAt)) continue // lokal lebih baru → dikirim ke server di bawah
+      if (r.deleted) merged.delete(r.id)
+      else merged.set(r.id, { ...r.data, id: r.id, updatedAt: r.updatedAt })
+    }
+    for (const [id, rec] of merged) {
+      const r = remoteById.get(id)
+      if (r && ts(rec.updatedAt) <= ts(r.updatedAt)) continue
+      rec.updatedAt = rec.updatedAt || new Date().toISOString()
+      pending.set(id, { id, updatedAt: rec.updatedAt, data: rec })
+    }
+    savedBills.value = [...merged.values()].map(normalizeRecord).sort((a, b) => ts(b.updatedAt) - ts(a.updatedAt))
+    write(KEY_BILLS, savedBills.value)
+
+    // ---- metode pembayaran & daftar teman
+    let localAt = 0
+    try { localAt = ts(localStorage.getItem(KEY_PROFILE_AT) || '') } catch { /* mode privat */ }
+    const rp = remote.profile
+    if (rp && ts(rp.updatedAt) >= localAt) {
+      paymentMethods.value = rp.paymentMethods
+      write(KEY_PAYMENTS, paymentMethods.value)
+      if (rp.friends.length) {
+        participants.value = rp.friends.map(({ paid, ...p }) => p)
+        if (!participants.value.some((p) => p.isOwner)) participants.value.unshift({ ...OWNER })
+        selectedMemberIds.value = participants.value.map((p) => p.id)
+        write(KEY_FRIENDS, participants.value)
+      }
+      try { localStorage.setItem(KEY_PROFILE_AT, rp.updatedAt) } catch { /* mode privat */ }
+    } else if (localAt > 0 || paymentMethods.value.length) {
+      queueProfile() // data di HP lebih baru / akun masih kosong → kirim ke akun
+    }
+
+    try { localStorage.setItem(KEY_SYNC_OWNER, uid) } catch { /* mode privat */ }
+    if (pending.size) flushBills()
+    if (owner.value.name === 'Kamu' && auth.user?.name) ownerName.value = auth.user.name
+  } catch { /* offline / server belum siap: tetap pakai data di HP */ } finally {
+    syncing = false
+  }
+}
+
+// akun baru selesai dimuat (login / pulihkan sesi) setelah halaman terbuka
+watch(() => auth.user?.id, (id) => { if (id) syncFromServer() })
+
+// ==========================================
 // 11. PENGENALAN & MULAI
 // ==========================================
 function finishWelcome() {
@@ -632,6 +749,8 @@ onMounted(() => {
   let seen = false
   try { seen = localStorage.getItem(KEY_WELCOME) === '1' } catch { /* mode privat */ }
   showWelcome.value = SHOW_WELCOME_EVERY_VISIT || !seen
+
+  if (auth.user?.id) syncFromServer()
 })
 
 onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
@@ -655,7 +774,7 @@ onBeforeUnmount(() => { clearPhoto(); scanAbort?.abort() })
             <CatMascot :size="46" mood="happy" />
             <div>
               <h1 class="font-display font-bold text-2xl text-ink leading-none">Tagihanku</h1>
-              <p class="text-[11px] text-muted font-bold mt-0.5">Split bill santai, tanpa login</p>
+              <p class="text-[11px] text-muted font-bold mt-0.5">{{ auth.loggedIn ? 'Tersimpan di akunmu' : 'Split bill santai, tanpa login' }}</p>
             </div>
           </div>
           <div class="flex gap-2">

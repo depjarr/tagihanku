@@ -12,13 +12,14 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ReceiptsModule } from './receipts/receipts.module';
 import { SettingsModule } from './settings/settings.module';
 import { SplitModule } from './split/split.module';
+import { SyncModule } from './sync/sync.module';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     ScheduleModule.forRoot(),
     PrismaModule, AuthModule, SettingsModule, NotificationsModule,
-    SplitModule, BillsModule, ParticipantsModule, ItemsModule, ReceiptsModule,
+    SplitModule, BillsModule, ParticipantsModule, ItemsModule, ReceiptsModule, SyncModule,
   ],
   providers: [AuthMiddleware, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
